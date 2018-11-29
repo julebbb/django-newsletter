@@ -28,6 +28,17 @@ logger = logging.getLogger(__name__)
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
+CATEGORY = getattr(
+    settings, 'CATEGORY', (
+        ('NEW', _("NEW")),
+        ('SPOTLIGHT', _("SPOTLIGHT")),
+        ('FOCUS', _("FOCUS")),
+        ('VIDEO', _("VIDEOS")),
+        ('DIARY', _("DIARY"))
+))
+
+CATEGORY_DICT = {key: value for key, value in CATEGORY}
+
 
 @python_2_unicode_compatible
 class Newsletter(models.Model):
@@ -412,6 +423,10 @@ class Article(models.Model):
         verbose_name=_('sort order'), blank=True
     )
 
+    category = models.CharField(
+        verbose_name=_('Category'), max_length=50,
+        choices=CATEGORY, blank=True, null=True)
+
     title = models.CharField(max_length=200, verbose_name=_('title'))
     text = models.TextField(verbose_name=_('text'))
 
@@ -440,6 +455,9 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def get_category(self):
+        return "%s" % CATEGORY_DICT[self.category]
 
     def save(self, **kwargs):
         if self.sortorder is None:
