@@ -37,6 +37,13 @@ CATEGORY = getattr(
         ('DIARY', _("DIARY"))
 ))
 
+ARTICLE_WIDTH = getattr(
+    settings, 'ARTICLE_WIDTH', (
+        ('100%', '100%'),
+        ('50%', '50%'),
+        ('33%', '33%')
+))
+
 CATEGORY_DICT = {key: value for key, value in CATEGORY}
 
 
@@ -426,9 +433,13 @@ class Article(models.Model):
     category = models.CharField(
         verbose_name=_('Category'), max_length=50,
         choices=CATEGORY, blank=True, null=True)
+    
+    width = models.CharField(
+        verbose_name=_('width'), max_length=4,
+        choices=ARTICLE_WIDTH, default='100%')
 
     title = models.CharField(max_length=200, verbose_name=_('title'))
-    text = models.TextField(verbose_name=_('text'))
+    text = models.TextField(verbose_name=_('text'), blank=True, null=True)
 
     url = models.URLField(
         verbose_name=_('link'), blank=True, null=True

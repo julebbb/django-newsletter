@@ -263,7 +263,7 @@ class ArticleInline(AdminImageMixin, StackedInline):
     formset = ArticleFormSet
     fieldsets = (
         (None, {
-            'fields': ('category','title', 'text')
+            'fields': ('category','width','title', 'text')
         }),
         (_('Optional'), {
             'fields': ('sortorder', 'url', 'image'),
