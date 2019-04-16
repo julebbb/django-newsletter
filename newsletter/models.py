@@ -28,6 +28,13 @@ logger = logging.getLogger(__name__)
 
 AUTH_USER_MODEL = getattr(settings, 'AUTH_USER_MODEL', 'auth.User')
 
+ARTICLE_WIDTH = getattr(
+    settings, 'ARTICLE_WIDTH', (
+        ('100%', '100%'),
+        ('50%', '50%'),
+        ('33%', '33%')
+))
+
 
 @python_2_unicode_compatible
 class Newsletter(models.Model):
@@ -258,7 +265,7 @@ class Subscription(models.Model):
             # If we are subscribed now and we used not to be so, subscribe.
             # If we user to be unsubscribed but are not so anymore, subscribe.
             if ((self.subscribed and not old_subscribed) or
-               (old_unsubscribed and not self.unsubscribed)):
+                    (old_unsubscribed and not self.unsubscribed)):
                 self._subscribe()
 
                 assert not self.unsubscribed
@@ -412,6 +419,10 @@ class Article(models.Model):
         verbose_name=_('sort order'), blank=True
     )
 
+    width = models.CharField(
+        verbose_name=_('width'), max_length=4,
+        choices=ARTICLE_WIDTH, default='100%')
+
     title = models.CharField(max_length=200, verbose_name=_('title'))
     text = models.TextField(verbose_name=_('text'))
 
@@ -452,6 +463,7 @@ class Article(models.Model):
 
 def get_default_newsletter():
     return Newsletter.get_default()
+
 
 @python_2_unicode_compatible
 class Message(models.Model):
@@ -646,7 +658,8 @@ class Submission(models.Model):
         submission.newsletter = message.newsletter
         submission.save()
         try:
-            submission.subscriptions.set(message.newsletter.get_subscriptions())
+            submission.subscriptions.set(
+                message.newsletter.get_subscriptions())
         except AttributeError:  # Django < 1.10
             submission.subscriptions = message.newsletter.get_subscriptions()
         return submission
@@ -658,8 +671,6 @@ class Submission(models.Model):
         self.newsletter = self.message.newsletter
 
         return super(Submission, self).save()
-
-    
 
     def get_absolute_url(self):
         assert self.newsletter.slug
@@ -713,6 +724,7 @@ class Submission(models.Model):
         default=False, verbose_name=_('sending'),
         db_index=True, editable=False
     )
+
 
 def get_address(name, email):
     # Converting name to ascii for compatibility with django < 1.9.
