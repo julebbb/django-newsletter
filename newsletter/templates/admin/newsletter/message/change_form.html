@@ -2,6 +2,35 @@
 
 {% load i18n admin_urls %}
 
+{% block extrahead %}
+    {{ block.super }} 
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <script type="text/javascript" charset="utf-8"> 
+        $(function(){ 
+            // inspect html to check id of category select dropdown.
+            $(document).on('change', "select#id_newsletter", function(){ 
+                $.getJSON("/newsletter/getcategory/",{id: $(this).val()}, function(j){ 
+                     var options = ''; 
+                     for (var i = 0; i < j.length; i++) { 
+                         options += '<option value="' + j[i].id + '">' + j[i].name + '</option>'; 
+                     } 
+                     // inspect html to check id of subcategory select dropdown.
+                     //$("select#id_subcategory").html(options); 
+                     $('select[id $= "-category"]').each(function(){
+                        if($(this).attr('id').indexOf("__prefix__") == -1) {
+                            //console.log($(this).attr('id'));
+                            $(this).html(options);
+                        }
+                     });
+                 }); 
+             });
+            
+         }); 
+    </script>
+{% endblock %} 
+
+
+
 {% block object-tools-items %}
   {{ block.super }}
 

@@ -33,7 +33,7 @@ ARTICLE_WIDTH = getattr(
         ('100%', '100%'),
         ('50%', '50%'),
         ('33%', '33%')
-))
+    ))
 
 
 @python_2_unicode_compatible
@@ -62,7 +62,12 @@ class Newsletter(models.Model):
     )
 
     groups = models.ManyToManyField(
-        Group, related_name='groups', verbose_name=_('Groups'),
+        Group, related_name='newsletters', verbose_name=_('Groups'),
+        blank=True
+    )
+
+    categories = models.ManyToManyField(
+        'Category', related_name='newsletters', verbose_name=_('Categories'),
         blank=True
     )
 
@@ -408,6 +413,21 @@ class Subscription(models.Model):
 
 
 @python_2_unicode_compatible
+class Category(models.Model):
+    """
+    A Category is used to regroupe article under same category
+    """
+    name = models.CharField(max_length=200, verbose_name=_('name'))
+
+    class Meta:
+        verbose_name = _('category')
+        verbose_name_plural = _('categories')
+
+    def __str__(self):
+        return self.name
+
+
+@python_2_unicode_compatible
 class Article(models.Model):
     """
     An Article within a Message which will be send through a Submission.
@@ -419,12 +439,17 @@ class Article(models.Model):
         verbose_name=_('sort order'), blank=True
     )
 
+    category = models.ForeignKey(
+        'Category', verbose_name=_('category'), related_name='articles',
+        on_delete=models.SET_NULL, blank=True, null=True
+    )
+
     width = models.CharField(
         verbose_name=_('width'), max_length=4,
         choices=ARTICLE_WIDTH, default='100%')
 
     title = models.CharField(max_length=200, verbose_name=_('title'))
-    text = models.TextField(verbose_name=_('text'))
+    text = models.TextField(verbose_name=_('text'), blank=True, null=True)
 
     url = models.URLField(
         verbose_name=_('link'), blank=True, null=True

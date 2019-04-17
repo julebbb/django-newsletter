@@ -2,6 +2,7 @@ import logging
 
 import datetime
 import socket
+import json
 
 from smtplib import SMTPException
 
@@ -11,7 +12,7 @@ from django.conf import settings
 from django.template.response import SimpleTemplateResponse
 
 from django.shortcuts import get_object_or_404, redirect
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 from django.views.generic import (
     ListView, DetailView,
@@ -30,7 +31,7 @@ from django.utils import timezone
 from django.forms.models import modelformset_factory
 
 from .compat import reverse
-from .models import Newsletter, Subscription, Submission
+from .models import Newsletter, Subscription, Submission, Category
 from .forms import (
     SubscribeRequestForm, UserUpdateForm, UpdateRequestForm,
     UnsubscribeRequestForm, UpdateForm
@@ -40,6 +41,11 @@ from .utils import ACTIONS
 
 
 logger = logging.getLogger(__name__)
+
+def get_subcategory(request): 
+    id = request.GET.get('id','') 
+    result = list(Category.objects.filter(newsletters__id=int(id)).values('id', 'name'))
+    return HttpResponse(json.dumps(result), content_type="application/json")
 
 
 def is_authenticated(user):

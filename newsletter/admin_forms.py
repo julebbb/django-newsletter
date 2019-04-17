@@ -6,7 +6,7 @@ from django.contrib.admin import widgets, options
 
 from django.utils.translation import ugettext as _
 
-from .models import Subscription, Newsletter, Submission
+from .models import Subscription, Newsletter, Submission, Category
 from .addressimport.parsers import parse_csv, parse_vcard, parse_ldif
 
 
@@ -186,6 +186,8 @@ class ArticleFormSet(forms.BaseInlineFormSet):
         super(ArticleFormSet, self).__init__(*args, **kwargs)
 
         assert self.instance
+        for form in self.forms:
+            form.fields['category'].queryset = Category.objects.filter(newsletters=self.instance.newsletter)
         next_sortorder = self.instance.get_next_article_sortorder()
         for index, form in enumerate(self.extra_forms):
             form.initial['sortorder'] = next_sortorder + index * 10

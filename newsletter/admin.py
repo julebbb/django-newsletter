@@ -30,7 +30,7 @@ except ImportError:  # Django < 1.10
 from sorl.thumbnail.admin import AdminImageMixin
 
 from .models import (
-    Newsletter, Subscription, Article, Message, Submission
+    Newsletter, Subscription, Article, Message, Submission, Category
 )
 
 from django.utils.timezone import now
@@ -268,7 +268,7 @@ class ArticleInline(AdminImageMixin, StackedInline):
     formset = ArticleFormSet
     fieldsets = (
         (None, {
-            'fields': ('title', 'text')
+            'fields': ('category', 'width', 'title', 'text')
         }),
         (_('Optional'), {
             'fields': ('sortorder', 'url', 'image'),
@@ -632,7 +632,15 @@ class SubscriptionAdmin(NewsletterAdminLinkMixin, ExtendibleModelAdminMixin,
         return my_urls + urls
 
 
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+    )
+
+
+
 admin.site.register(Newsletter, NewsletterAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Message, MessageAdmin)
 admin.site.register(Subscription, SubscriptionAdmin)
+admin.site.register(Category, CategoryAdmin)

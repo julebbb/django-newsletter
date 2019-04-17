@@ -4,10 +4,11 @@ from .views import (
     NewsletterListView, NewsletterDetailView,
     SubmissionArchiveIndexView, SubmissionArchiveDetailView,
     SubscribeRequestView, UnsubscribeRequestView, UpdateRequestView,
-    ActionTemplateView, UpdateSubscriptionView,
+    ActionTemplateView, UpdateSubscriptionView, get_subcategory
 )
 
 urlpatterns = [
+    surl('^getcategory/$', get_subcategory, name='get_subcategory'),
     # Newsletter list and detail view
     surl('^$', NewsletterListView.as_view(), name='newsletter_list'),
     surl(
