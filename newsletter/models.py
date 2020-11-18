@@ -35,6 +35,13 @@ ARTICLE_WIDTH = getattr(
         ('33%', '33%')
     ))
 
+ARTICLE_IMG_POSITION = getattr(
+    settings, 'ARTICLE_IMG_POSITION', (
+        ('right', 'Droite'),
+        ('left', 'Gauche'),
+        ('top', 'Haut'),
+    )
+)
 
 @python_2_unicode_compatible
 class Newsletter(models.Model):
@@ -461,6 +468,10 @@ class Article(models.Model):
         verbose_name=_('image')
     )
 
+    position = models.CharField(
+        verbose_name=_('position de l image'), max_length=6,
+        choices=ARTICLE_IMG_POSITION, default='top'
+    )
     # Message this article is associated with
     # TODO: Refactor post to message (post is legacy notation).
     post = models.ForeignKey(
