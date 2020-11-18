@@ -465,6 +465,8 @@ class Message(models.Model):
         verbose_name=_('modified'), auto_now=True, editable=False
     )
 
+    edito = models.TextField(verbose_name=_('edito'), blank=True, null=True)
+
     class Meta:
         verbose_name = _('message')
         verbose_name_plural = _('messages')
