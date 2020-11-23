@@ -271,7 +271,7 @@ class ArticleInline(AdminImageMixin, StackedInline):
             'fields': ('category', 'width', 'title', 'text')
         }),
         (_('Optional'), {
-            'fields': ('sortorder', 'url', 'image'),
+            'fields': ('sortorder', 'url', 'image', 'position'),
             'classes': ('collapse',)
         }),
     )
