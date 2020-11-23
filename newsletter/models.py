@@ -470,7 +470,8 @@ class Article(models.Model):
 
     position = models.CharField(
         verbose_name=_('position de l image'), max_length=6,
-        choices=ARTICLE_IMG_POSITION, default='top'
+        choices=ARTICLE_IMG_POSITION, default='top',
+        blank=True, null=True
     )
     # Message this article is associated with
     # TODO: Refactor post to message (post is legacy notation).
