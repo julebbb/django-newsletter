@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='article',
             name='position',
-            field=models.CharField(choices=[('right', 'Droite'), ('left', 'Gauche'), ('top', 'Haut')], default='top', max_length=6, verbose_name='position de l image'),
+            field=models.CharField(blank=True, choices=[('right', 'Droite'), ('left', 'Gauche'), ('top', 'Haut')], default='top', max_length=6, null=True, verbose_name='position de l image'),
         ),
     ]
